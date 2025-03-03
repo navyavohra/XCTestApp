@@ -1,11 +1,12 @@
-# Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
+# Define the platform version globally
+platform :ios, '16.0'
 
 target 'XCTestApp' do
-  # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
-  # Pods for XCTestApp
+  # Example dependencies (replace with actual dependencies)
+  pod 'Alamofire'
+  pod 'SnapKit'
 
   target 'XCTestAppTests' do
     inherit! :search_paths
@@ -13,7 +14,7 @@ target 'XCTestApp' do
   end
 
   target 'XCTestAppUITests' do
-    # Pods for testing
+    inherit! :search_paths
+    # Pods for UI testing
   end
-
 end
