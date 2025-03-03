@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "06740EEC27A81BBA268121404D8F36E6"
-               BuildableName = "Pods_XCTestApp_XCTestAppUITests.framework"
-               BlueprintName = "Pods-XCTestApp-XCTestAppUITests"
+               BlueprintIdentifier = "19622742EBA51E823D6DAE3F8CDBFAD4"
+               BuildableName = "SnapKit.framework"
+               BlueprintName = "SnapKit"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

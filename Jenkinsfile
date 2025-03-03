@@ -19,11 +19,32 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                cd XCTestApp  # Ensure we're in the correct project directory
+                cd XCTestApp  # Ensure we are in the correct project folder
                 export LANG=en_US.UTF-8
                 export PATH=/usr/local/bin:$PATH
-                pod install
-                ls -la  # Debugging: List files to check if .xcworkspace exists
+                
+                echo "🛠️ Installing CocoaPods dependencies..."
+                rm -rf Pods Podfile.lock  # Remove existing pods to ensure a clean install
+                pod install --repo-update
+                
+                echo "✅ CocoaPods dependencies installed successfully!"
+                '''
+            }
+        }
+
+        stage('Verify .xcworkspace') {
+            steps {
+                sh '''
+                cd XCTestApp  # Ensure we are in the project directory
+                
+                echo "🔍 Checking if .xcworkspace was generated..."
+                if [ ! -d "XCTestApp.xcworkspace" ]; then
+                    echo "❌ Error: XCTestApp.xcworkspace does not exist!"
+                    ls -la  # Show current files for debugging
+                    exit 1
+                fi
+                
+                echo "✅ .xcworkspace file exists, proceeding with the build..."
                 '''
             }
         }
@@ -31,23 +52,32 @@ pipeline {
         stage('Build & Test') {
             steps {
                 sh '''
-                cd XCTestApp  # Ensure we're in the correct directory
-                if [ ! -d "$WORKSPACE" ]; then
-                    echo "Error: $WORKSPACE does not exist!"
-                    ls -la  # Debugging: List files to see what's present
-                    exit 1
-                fi
+                cd XCTestApp  # Ensure we are in the correct project directory
+                
+                echo "🚀 Running Xcode build & test..."
                 xcodebuild test -workspace $WORKSPACE -scheme $SCHEME \
                 -destination "platform=iOS Simulator,name=$IOS_DEVICE" \
-                -enableCodeCoverage YES
+                -enableCodeCoverage YES | xcpretty && exit ${PIPESTATUS[0]}
                 '''
             }
         }
 
         stage('Deploy') {
             steps {
-                echo "Deploying to production..."
+                echo "🚀 Deploying to production..."
             }
+        }
+    }
+
+    post {
+        always {
+            echo "📝 Build process completed!"
+        }
+        success {
+            echo "✅ Build & Tests passed successfully!"
+        }
+        failure {
+            echo "❌ Build failed! Check the logs for more details."
         }
     }
 }
