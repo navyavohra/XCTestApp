@@ -19,10 +19,11 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                cd XCTestApp  # Go inside the project folder (not xcworkspace)
+                cd XCTestApp  # Ensure we're in the correct project directory
                 export LANG=en_US.UTF-8
                 export PATH=/usr/local/bin:$PATH
                 pod install
+                ls -la  # Debugging: List files to check if .xcworkspace exists
                 '''
             }
         }
@@ -31,8 +32,9 @@ pipeline {
             steps {
                 sh '''
                 cd XCTestApp  # Ensure we're in the correct directory
-                if [ ! -f "$WORKSPACE" ]; then
+                if [ ! -d "$WORKSPACE" ]; then
                     echo "Error: $WORKSPACE does not exist!"
+                    ls -la  # Debugging: List files to see what's present
                     exit 1
                 fi
                 xcodebuild test -workspace $WORKSPACE -scheme $SCHEME \
