@@ -19,7 +19,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                cd $WORKSPACE || exit 1  # Ensure Jenkins is in the project directory
+                cd XCTestApp  # Go inside the project folder (not xcworkspace)
                 export LANG=en_US.UTF-8
                 export PATH=/usr/local/bin:$PATH
                 pod install
@@ -30,7 +30,7 @@ pipeline {
         stage('Build & Test') {
             steps {
                 sh '''
-                cd $WORKSPACE || exit 1
+                cd XCTestApp  # Ensure we're in the correct directory
                 if [ ! -f "$WORKSPACE" ]; then
                     echo "Error: $WORKSPACE does not exist!"
                     exit 1
