@@ -19,14 +19,12 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                cd XCTestApp  # Ensure we are in the correct project folder
+                cd $WORKSPACE
                 export LANG=en_US.UTF-8
                 export PATH=/usr/local/bin:$PATH
-                
                 echo "🛠️ Installing CocoaPods dependencies..."
-                rm -rf Pods Podfile.lock  # Remove existing pods to ensure a clean install
+                rm -rf Pods Podfile.lock
                 pod install --repo-update
-                
                 echo "✅ CocoaPods dependencies installed successfully!"
                 '''
             }
@@ -35,16 +33,12 @@ pipeline {
         stage('Verify .xcworkspace') {
             steps {
                 sh '''
-                cd XCTestApp  # Ensure we are in the project directory
-                
                 echo "🔍 Checking if .xcworkspace was generated..."
-                if [ ! -d "XCTestApp.xcworkspace" ]; then
-                    echo "❌ Error: XCTestApp.xcworkspace does not exist!"
-                    ls -la  # Show current files for debugging
+                if [ ! -d "$WORKSPACE" ]; then
+                    echo "❌ Error: $WORKSPACE does not exist!"
                     exit 1
                 fi
-                
-                echo "✅ .xcworkspace file exists, proceeding with the build..."
+                echo "✅ $WORKSPACE exists!"
                 '''
             }
         }
@@ -52,12 +46,9 @@ pipeline {
         stage('Build & Test') {
             steps {
                 sh '''
-                cd XCTestApp  # Ensure we are in the correct project directory
-                
-                echo "🚀 Running Xcode build & test..."
                 xcodebuild test -workspace $WORKSPACE -scheme $SCHEME \
                 -destination "platform=iOS Simulator,name=$IOS_DEVICE" \
-                -enableCodeCoverage YES | xcpretty && exit ${PIPESTATUS[0]}
+                -enableCodeCoverage YES
                 '''
             }
         }
@@ -72,9 +63,6 @@ pipeline {
     post {
         always {
             echo "📝 Build process completed!"
-        }
-        success {
-            echo "✅ Build & Tests passed successfully!"
         }
         failure {
             echo "❌ Build failed! Check the logs for more details."
