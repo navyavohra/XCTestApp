@@ -6,7 +6,7 @@ pipeline {
         IOS_DEVICE = "iPhone 14 Pro"
         SCHEME = "XCTestApp"
         WORKSPACE = "XCTestApp.xcworkspace"
-        LANG = "en_US.UTF-8" 
+        LANG = "en_US.UTF-8"
     }
 
     stages {
@@ -19,7 +19,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                cd XCTestApp  # Ensure Jenkins is in the correct directory
+                cd $WORKSPACE || exit 1  # Ensure Jenkins is in the project directory
                 export LANG=en_US.UTF-8
                 export PATH=/usr/local/bin:$PATH
                 pod install
@@ -30,7 +30,11 @@ pipeline {
         stage('Build & Test') {
             steps {
                 sh '''
-                cd XCTestApp
+                cd $WORKSPACE || exit 1
+                if [ ! -f "$WORKSPACE" ]; then
+                    echo "Error: $WORKSPACE does not exist!"
+                    exit 1
+                fi
                 xcodebuild test -workspace $WORKSPACE -scheme $SCHEME \
                 -destination "platform=iOS Simulator,name=$IOS_DEVICE" \
                 -enableCodeCoverage YES
