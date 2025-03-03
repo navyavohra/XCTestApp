@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         PATH = "/usr/local/bin:$PATH"
-        IOS_DEVICE = "iPhone 14 Pro"
+        IOS_DEVICE = "iPhone 16 Pro"
         SCHEME = "XCTestApp"
         WORKSPACE = "XCTestApp.xcworkspace"
         LANG = "en_US.UTF-8"
