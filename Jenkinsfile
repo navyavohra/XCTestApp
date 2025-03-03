@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         PATH = "/usr/local/bin:$PATH"
-        IOS_DEVICE = "iPhone 16"
+        IOS_DEVICE = "iPhone 16 Pro"
         SCHEME = "XCTestApp"
         WORKSPACE = "XCTestApp.xcworkspace"
         LANG = "en_US.UTF-8"
@@ -46,8 +46,10 @@ pipeline {
         stage('Build & Test') {
             steps {
                 sh '''
-                xcodebuild test -workspace $WORKSPACE -scheme $SCHEME \
-                -destination "platform=iOS Simulator,name=$IOS_DEVICE" \
+                xcodebuild test 
+		-workspace XCTestApp.xcworkspace 
+		-scheme XCTestApp 
+		-destination 'platform=iOS Simulator,name=iPhone 16 Pro'
                 -enableCodeCoverage YES
                 '''
             }
