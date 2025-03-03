@@ -1,12 +1,12 @@
 pipeline {
-    agent any  // Runs on any available Jenkins agent
+    agent any  
 
     environment {
         PATH = "/usr/local/bin:$PATH"
         IOS_DEVICE = "iPhone 14 Pro"
         SCHEME = "XCTestApp"
         WORKSPACE = "XCTestApp.xcworkspace"
-        LANG = "en_US.UTF-8"  // Ensure UTF-8 Encoding
+        LANG = "en_US.UTF-8" 
     }
 
     stages {
@@ -19,6 +19,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
+                cd XCTestApp  # Ensure Jenkins is in the correct directory
                 export LANG=en_US.UTF-8
                 export PATH=/usr/local/bin:$PATH
                 pod install
@@ -29,6 +30,7 @@ pipeline {
         stage('Build & Test') {
             steps {
                 sh '''
+                cd XCTestApp
                 xcodebuild test -workspace $WORKSPACE -scheme $SCHEME \
                 -destination "platform=iOS Simulator,name=$IOS_DEVICE" \
                 -enableCodeCoverage YES
@@ -39,7 +41,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo "Deploying to production..."
-                // Add deployment commands here
             }
         }
     }
