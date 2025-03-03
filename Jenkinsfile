@@ -2,6 +2,7 @@ pipeline {
     agent any  // Runs on any available Jenkins agent
 
     environment {
+	PATH = "/usr/local/bin:$PATH"
         IOS_DEVICE = "iPhone 14 Pro"
         SCHEME = "XCTestApp"
         WORKSPACE = "XCTestApp.xcworkspace"
@@ -16,7 +17,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'pod install'  // Install CocoaPods dependencies (if applicable)
+                sh 'export PATH=/usr/local/bin:$PATH && pod install'
             }
         }
 
