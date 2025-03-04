@@ -49,7 +49,7 @@ pipeline {
                 xcodebuild test 
 		-workspace XCTestApp.xcworkspace 
 		-scheme XCTestApp 
-		-destination 'platform=iOS Simulator,name=iPhone 16 Pro, OS=latest'
+		-destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=latest'
                 -enableCodeCoverage YES
 		-allowProvisioningUpdates
                 '''
