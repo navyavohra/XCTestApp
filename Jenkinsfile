@@ -24,7 +24,7 @@ pipeline {
                 export PATH=/usr/local/bin:$PATH
                 echo "🛠️ Installing CocoaPods dependencies..."
                 rm -rf Pods Podfile.lock
-                pod install --repo-update
+                sudo -u navyavohra pod install --repo-update
                 echo "✅ CocoaPods dependencies installed successfully!"
                 '''
             }
@@ -49,8 +49,9 @@ pipeline {
                 xcodebuild test 
 		-workspace XCTestApp.xcworkspace 
 		-scheme XCTestApp 
-		-destination 'platform=iOS Simulator,name=iPhone 16 Pro'
+		-destination 'platform=iOS Simulator,name=iPhone 16 Pro, OS=latest'
                 -enableCodeCoverage YES
+		-allowProvisioningUpdates
                 '''
             }
         }
