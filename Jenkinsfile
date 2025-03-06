@@ -17,18 +17,19 @@ pipeline {
         }
 
         stage('Install Dependencies') {
-            steps {
-                sh '''
-                cd $WORKSPACE
-                export LANG=en_US.UTF-8
-                export PATH=/usr/local/bin:$PATH
-                echo "🛠️ Installing CocoaPods dependencies..."
-                rm -rf Pods Podfile.lock
-                sudo -u navyavohra pod install --repo-update
-                echo "✅ CocoaPods dependencies installed successfully!"
-                '''
-            }
-        }
+    		steps {
+		        sh '''
+		        echo "🛠️ Installing CocoaPods dependencies..."
+		        rm -rf Pods Podfile.lock
+		        if [ ! -d "$WORKSPACE" ]; then
+		            echo "❌ Error: $WORKSPACE does not exist!"
+		            exit 1
+		        fi
+		        pod install --repo-update
+		        echo "✅ CocoaPods dependencies installed successfully!"
+		        '''
+    		}
+	}
 
         stage('Verify .xcworkspace') {
             steps {
